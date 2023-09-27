@@ -1,7 +1,8 @@
-
+openai_api_key.py
 *.pyc
 ./venv
 ./venv/*
 ./cache
 *.log
 ./.idea
+./cache
