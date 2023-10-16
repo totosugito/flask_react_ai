@@ -1,5 +1,0 @@
-pandasai==1.2.8
-plotly==5.17.0
-beautifulsoup4==4.12.2
-flask==2.3.3
-flask-cors==4.0.0
