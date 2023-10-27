@@ -33,7 +33,8 @@ def analyze_data(dfs: list[{engine_df_name}]) -> dict:
     Analyze the data
     1. Prepare: Preprocessing and cleaning data if necessary
     2. Process: Manipulating data for analysis (grouping, filtering, aggregating, etc.)
-    3. Analyze: Conducting the actual analysis (us library Plotly to make a chart using the dataframe. Do not save the image and return as PlotLy object)
+    3. Analyze: Conducting the actual analysis (If the user asks to plot a chart, 
+       you must use Plotly library to make charts using the dataframe. Do not save the image and return as PlotLy object).
     At the end, return a dictionary of:
     - type (possible values "text", "number", "dataframe", "plot", "plotly")
     - value (can be a string, a dataframe, the path of the plot, or PlotLy object)
@@ -130,7 +131,7 @@ class MyDataFrame:
             # -----------------------------------
             if isinstance(response, pandasai.smart_dataframe.SmartDataframe):
                 return 'SmartDataframe', self.smart_data_frame_to_json(response)
-            elif isinstance(response, plotly.graph_objs._figure.Figure):
+            elif isinstance(response, plotly.graph_objs.Figure):
                 return 'plotly', {"data": json.loads(response.data[0].to_json()),
                                   "layout": json.loads(response.layout.to_json())}
             else:
