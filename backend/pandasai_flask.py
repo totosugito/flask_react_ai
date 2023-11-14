@@ -4,7 +4,7 @@ from flask import Flask, request
 
 import pandas as pd
 import openai_api_key
-from pandasai import SmartDataframe
+from pandasai import SmartDataframe, SmartDatalake
 import pandasai
 import plotly
 from pandasai.prompts import GeneratePythonCodePrompt
@@ -48,6 +48,7 @@ Using the provided dataframes (`dfs`), update the python code based on the last 
 Updated code:
 """
 
+
 default_data = {
     "country": ["United States", "United Kingdom", "France", "Germany", "Italy", "Spain", "Canada", "Australia",
                 "Japan", "China"],
@@ -84,18 +85,29 @@ class MyDataFrame:
     def set_data_frame(self, obj):
         try:
             self.create_chat_api()
-            self.df = pd.DataFrame(obj)
-            self.call_API = SmartDataframe(self.df,
-                                           config={
-                                               "llm": self.llm,
-                                               "open_charts": False,
-                                               "save_charts": False,
-                                               "enable_cache": False,
-                                               "save_logs": False,
-                                               "custom_prompts": {
-                                                   "generate_python_code": MyCustomPrompt(),
-                                               }
-                                           })
+            # self.df = pd.DataFrame(obj)
+            # self.call_API = SmartDataframe(self.df,
+            #                                config={
+            #                                    "llm": self.llm,
+            #                                    "open_charts": False,
+            #                                    "save_charts": False,
+            #                                    "enable_cache": False,
+            #                                    "save_logs": False,
+            #                                    "custom_prompts": {
+            #                                        "generate_python_code": MyCustomPrompt(),
+            #                                    }
+            #                                })
+            self.call_API = SmartDatalake([obj],
+                                          config={
+                                              "llm": self.llm,
+                                              "open_charts": False,
+                                              "save_charts": False,
+                                              "enable_cache": False,
+                                              "save_logs": False,
+                                              "custom_prompts": {
+                                                  "generate_python_code": MyCustomPrompt(),
+                                              }
+                                          })
             return "Successful upload the new data", HTTP_SUCCESS
         except:
             return "Failed to upload the data", HTTP_FAILED
