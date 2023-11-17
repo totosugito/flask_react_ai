@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 from flask import Flask, request
 
@@ -59,6 +60,7 @@ default_data = {
 
 HTTP_SUCCESS = 200
 HTTP_FAILED = 501
+userAiName = "Chat GPT"
 
 
 class MyDataFrame:
@@ -167,14 +169,14 @@ class MyDataFrame:
 
         self.data_is_ready()
         if self.call_API is None:
-            return {'id': random_id, 'user': 'ai', 'question': question, 'type': 'error',
-                    'response': 'No license found'}, HTTP_SUCCESS
+            return {'id': random_id, 'user': userAiName, 'question': question, 'type': 'error',
+                    'response': 'No license found', 'timestamp': datetime.now().timestamp()}, HTTP_SUCCESS
 
         # try:
         answer = self.call_API.chat(question)
         if answer is None:
-            return {'id': random_id, 'user': 'ai', 'question': question, 'type': 'error',
-                    'response': 'No result'}, HTTP_SUCCESS
+            return {'id': random_id, 'user': userAiName, 'question': question, 'type': 'error',
+                    'response': 'No result', 'timestamp': datetime.now().timestamp()}, HTTP_SUCCESS
 
         response_type, response = self.reformat_response(question=question, response=answer)
 
@@ -185,15 +187,15 @@ class MyDataFrame:
         if "'pandas.core.arrays.arrow.dtype'" in response:
             answer = self.call_API.chat(question)
             if answer is None:
-                return {'id': random_id, 'user': 'ai', 'question': question, 'type': 'unknown',
-                        'response': "No result"}, HTTP_SUCCESS
+                return {'id': random_id, 'user': userAiName, 'question': question, 'type': 'unknown',
+                        'response': "No result", 'timestamp': datetime.now().timestamp()}, HTTP_SUCCESS
 
             response_type, response = self.reformat_response(question=question, response=answer)
-            return {'id': random_id, 'user': 'ai', 'question': question, 'type': response_type,
-                    'response': response}, HTTP_SUCCESS
+            return {'id': random_id, 'user': userAiName, 'question': question, 'type': response_type,
+                    'response': response, 'timestamp': datetime.now().timestamp()}, HTTP_SUCCESS
         else:
-            return {'id': random_id, 'user': 'ai', 'question': question, 'type': response_type,
-                    'response': response}, HTTP_SUCCESS
+            return {'id': random_id, 'user': userAiName, 'question': question, 'type': response_type,
+                    'response': response, 'timestamp': datetime.now().timestamp()}, HTTP_SUCCESS
         # except:
         #     obj = {"status": "Error", "message": "error try cath"}
         #     return 'error'
