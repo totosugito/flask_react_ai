@@ -14,7 +14,7 @@ from pandasai.prompts import AbstractPrompt
 
 
 class MyCustomPrompt(GeneratePythonCodePrompt):
-    template = """ OK--- Prompt to generate Python code
+    template = """Prompt to generate Python code
 ```
 You are provided with the following pandas DataFrames:
 
@@ -82,7 +82,8 @@ class MyDataFrame:
 
     def create_default_data(self):
         print("------------ create_default_data ---------------")
-        self.set_data_frame(default_data)
+        # self.set_data_frame(default_data)
+        self.set_data_frame(pd.read_csv("data/oil_condensat_2021.csv", delimiter=";"))
 
     def set_data_frame(self, obj):
         try:
@@ -123,7 +124,7 @@ class MyDataFrame:
             i_col = 0
             full_row = {'Index': row}
             for col in df_.columns:
-                full_row[col] = row_.iloc[i_col]
+                full_row[col] = str(row_.iloc[i_col])
                 i_col = i_col + 1
 
             result.append(full_row)
@@ -209,7 +210,7 @@ from flask_cors import CORS, cross_origin
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
-
+app.json.sort_keys = False
 
 @app.route("/test")
 def test():
@@ -221,7 +222,8 @@ def test():
 def send_question():
     # send the question to dataframe
     question = request.form['question']
-    return mdf.get_answer(question=question)
+    result = mdf.get_answer(question=question)
+    return result
 
 
 @app.route('/set-data-frame', methods=['POST'])
