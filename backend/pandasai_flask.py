@@ -1,6 +1,7 @@
 import json
 from datetime import datetime
 
+import numpy
 from flask import Flask, request
 
 import pandas as pd
@@ -83,7 +84,8 @@ class MyDataFrame:
     def create_default_data(self):
         print("------------ create_default_data ---------------")
         # self.set_data_frame(default_data)
-        self.set_data_frame(pd.read_csv("data/oil_condensat_2021.csv", delimiter=";"))
+        # self.set_data_frame(pd.read_csv("data/oil_condensat_2021.csv", delimiter=";"))
+        self.set_data_frame(pd.read_csv("data/oil_condensat_2021_to_nov.csv", delimiter=";"))
 
     def set_data_frame(self, obj):
         try:
@@ -124,7 +126,12 @@ class MyDataFrame:
             i_col = 0
             full_row = {'Index': row}
             for col in df_.columns:
-                full_row[col] = str(row_.iloc[i_col])
+                if isinstance(row_.iloc[i_col], numpy.float64):
+                    full_row[col] = (row_.iloc[i_col]).tolist()
+                elif isinstance(row_.iloc[i_col], numpy.int64):
+                    full_row[col] = (row_.iloc[i_col]).tolist()
+                else:
+                    full_row[col] = row_.iloc[i_col]
                 i_col = i_col + 1
 
             result.append(full_row)
@@ -149,6 +156,10 @@ class MyDataFrame:
             elif isinstance(response, plotly.graph_objs.Figure):
                 return 'plotly', {"data": json.loads(response.data[0].to_json()),
                                   "layout": json.loads(response.layout.to_json())}
+            elif isinstance(response, numpy.int64):
+                return 'text', str(response.tolist())
+            elif isinstance(response, numpy.float64):
+                return 'text', str(response.tolist())
             else:
                 return 'text', response
         except:
