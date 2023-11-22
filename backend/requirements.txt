@@ -1,5 +1,6 @@
-pandasai
+pandasai==1.4.8
 plotly==5.17.0
 beautifulsoup4==4.12.2
 flask==3.0.0
 flask-cors==4.0.0
+requests

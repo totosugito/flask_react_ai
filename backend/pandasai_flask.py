@@ -120,6 +120,8 @@ class MyDataFrame:
     def smart_data_frame_to_json(self, df_):
         result = []
         i_row = 0
+
+        df_ = df_.round(decimals=3)
         for row in df_.index:
             row_ = df_.iloc[i_row]
 
